@@ -1,0 +1,24 @@
+# -*- coding: utf-8 -*-
+""" CRLM settings """
+
+import logging
+import os
+
+
+###############################################################################
+#                                GENERAL CONFIG                               #
+###############################################################################
+
+BASE_PATH = os.getenv("HOME")
+
+LOG_LEVEL = logging.INFO
+
+###############################################################################
+#                                  DEBUGGING                                  #
+###############################################################################
+
+DEBUG = False
+
+if DEBUG:
+    # Add any extra debugging behaviour here
+    LOG_LEVEL = logging.DEBUG

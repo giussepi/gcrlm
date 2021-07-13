@@ -1,0 +1,17 @@
+# -*- coding: utf-8 -*-
+""" main.py """
+
+import logzero
+
+from settings import LOG_LEVEL
+
+
+logzero.loglevel(LOG_LEVEL)
+
+
+def main():
+    pass
+
+
+if __name__ == '__main__':
+    main()
