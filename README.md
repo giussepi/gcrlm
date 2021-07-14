@@ -13,7 +13,7 @@ CRLM samples: A, B) Images with good quantity of annotations. C, D) Images scarc
 1. Add to your requirements file:
 
    ``` bash
-   crlm_processor @ https://github.com/giussepi/gcrlm/tarball/main
+   gcrlm @ https://github.com/giussepi/gcrlm/tarball/main
    ```
 
    and run `pip install -r requirements.txt`
