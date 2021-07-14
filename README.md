@@ -18,12 +18,12 @@ CRLM samples: A, B) Images with good quantity of annotations. C, D) Images scarc
 
    and run `pip install -r requirements.txt`
 
-   or run
+   or just run
 
    ``` bash
    pip install git+git://github.com/giussepi/crlm_processor.git --use-feature=2020-resolver --no-cache-dir
    ```
-   or run
+   or just run
 
    ``` bash
    pip install https://github.com/giussepi/crlm_processor/tarball/main --use-feature=2020-resolver --no-cache-dir
@@ -35,14 +35,8 @@ CRLM samples: A, B) Images with good quantity of annotations. C, D) Images scarc
 
 3. Update your main.py following the file main.py.template
 
+
 ## Main Features
-
-## Plot processed WSI
-``` python
-from Load.Load_model_on_wsi import plot_processed_wsi
-
-plot_processed_wsi('/home/giussepi/Desktop/CRLM_042.ndpi', False, False, 5)
-```
 
 ### Basic Operations
 
@@ -50,23 +44,25 @@ Use the CRLM class to review the npdi files, extract annotations, bounding
 boxes, plot annotations, plot slides, extract masks, create annotations images
 with some data augmentation, etc. e.g.:
 ``` python
-from Data.Prepare_patches.CRLM import CRLM
+from gcrlm.managers import CRLM
 
-tc = CRLM(index=1, fileroot='/media/giussepi/2_0_TB_Hard_Disk/CRLM/Original/')
+tc = CRLM(index=1, fileroot='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set/')
 tc.plot_slide()
 name, tmpim, mask = tc.extract_annotation_image(1, plot=True)
 ```
 
 ### Plot a ROI along with its Annotations
 ``` python
-from Data.Prepare_patches.CRLM import CRLM
+from gcrlm.managers import CRLM
 
-tc = CRLM(index=1, fileroot='/media/giussepi/2_0_TB_Hard_Disk/CRLM/Original/')
-tc.tc.plot_roi(tc.all_rois[0], line_width=2.5)
+tc = CRLM(index=1, fileroot='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set/')
+tc.plot_roi(tc.all_rois[0], line_width=2.5)
 ```
 
 ### Split Dataset into train, validation and test
 ``` python
+from gcrlm.processors import CRLMSplitDataset, CRLMSmartSplitDataset
+
 # randomly
 CRLMSplitDataset(
     dataset_path='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set',
@@ -83,7 +79,7 @@ CRLMSmartSplitDataset(
 ### Create Annotation Crops and Masks from one WSI (.ndpi and .ndpa)
 Use CRLM.extract_annotations_and_masks to create
 ``` python
-from Data.Prepare_patches.CRLM import CRLM
+from gcrlm.managers import CRLM
 
 tc = CRLM(index=1, fileroot='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set/')
 
@@ -120,9 +116,9 @@ Example generated masks:
 
 
 #### Verifying that one Mask was Correctly cropped
-1. Create masks from any slide. E.g.: CRLM 17.ndpi
+1. Create masks from any slide. E.g.: CRLM 11.ndpi
 ``` python
-tc = CRLM(index=17, fileroot='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set/')
+tc = CRLM(index=11, fileroot='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set/')
 
 # plot single annotation (the main one used to create the crop)
 tc.extract_annotations_and_masks(
@@ -137,7 +133,7 @@ tc.extract_annotation_image(291, 2000, 2000,  plot=True, level=4, ann_mgr=tc.get
 tc.extract_annotation_image(
     291, 2000, 2000,  plot=True, level=4, ann_mgr=tc.get_ann_mgr(), multiple_classes=True)
 ```
-2. Open the folder `annotations_masks`, created at the parent directoy of `Annotated - Training set/`, and select a mask to be verified. E.g.: for `T_f017_r00_a00100_c00056.mask.png` the meanings of each part of its name are defined below:
+2. Open the folder `annotations_masks`, created at the parent directoy of `Annotated - Training set/`, and select a mask to be verified. E.g.: for `C_f011_r02_a00100_c00401.mask.png` the meanings of each part of its name are defined below:
 
 `<label>_f<DNPI file number>_r<roi number>_a<annotation number>_c<crop counter>.mask.png`.
 
@@ -145,7 +141,7 @@ tc.extract_annotation_image(
 
 3. Use the ROI number and the annotation number to plot them together.
 ``` python
-tc.plot_roi(0, annotations=[100], line_width=2.5, level=4)
+tc.plot_roi(2, annotations=[100], line_width=2.5, level=4)
 ```
 **Note**: If your annotation is not inside a ROI, it has -1 as roi value. Then, you can still plot the image using the following lines:
 
@@ -159,7 +155,7 @@ _, _, _ = tc.extract_annotation_image(100, plot=True, level=4)
 ### Analyze the CRLM dataset
 Use the CRLMDatasetAnalyzer to get a quick analysis about the CRLM dataset
 ``` python
-from Data.dataset_processors.crlm import CRLMDatasetAnalyzer
+from gcrlm.processors import CRLMDatasetAnalyzer
 
 CRLMDatasetAnalyzer(
     images_path='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set/'
@@ -167,11 +163,11 @@ CRLMDatasetAnalyzer(
 ```
 
 ### Create Annotation Crops and Masks from the whole CRLM Dataset
-Use the CRLMDatasetProcessor data processor. This class can process the CRLM dataset in three different ways: Using only ROIs, using all the annotations, and using all the annotations but considering the ROIs when available. See Data.dataset_processors.constants.CRLMProcessingTypes for a complete description of each processing type.
+Use the CRLMDatasetProcessor data processor. This class can process the CRLM dataset in three different ways: Using only ROIs, using all the annotations, and using all the annotations but considering the ROIs when available. See gcrlm.constants.CRLMProcessingTypes for a complete description of each processing type.
 
 ``` python
-from Data.dataset_processors.constants import CRLMProcessingTypes
-from Data.dataset_processors.crlm import CRLMDatasetProcessor
+from gcrlm.constants import CRLMProcessingTypes
+from gcrlm.processors import CRLMDatasetProcessor
 
 CRLMDatasetProcessor(
     level=4,
@@ -185,18 +181,18 @@ CRLMDatasetProcessor(
 ### Quantify created crops
 Quantify the crops per label with the CRLMCropsAnalyzer class
 ``` python
-from Data.dataset_processors.crlm import CRLMCropsAnalyzer
+from gcrlm.processors import CRLMCropsAnalyzer
 
 ann_counter = CRLMCropsAnalyzer(
-    crops_masks_path='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/annotations_masks_allwithrois/'
+    crops_masks_path='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/annotations_masks/'
 )()
 ```
 
 ### Perform data augmentation over the crops & masks per label/class
 Use the CRLMAugmentationProcessor to multiply the number of images/crops per class at will. E.g.:
 ``` python
-from Data.dataset_processors.crlm import CRLMAugmentationProcessor, CRLMCropsAnalyzer
-from Data.dataset_processors.models import AugmentDict
+from gcrlm.processors import CRLMAugmentationProcessor, CRLMCropsAnalyzer
+from gcrlm.core.models import AugmentDict
 
 # using custom class multipliers
 # the following code will only duplicate the number of crops and masks from the classs foreign_body
@@ -237,6 +233,7 @@ Use the `CRLMCropRandSample` to randomly sample your crop subdatasets using a us
 crops/images & masks per label/class.
 
 ``` python
+from gcrlm.processors import CRLMCropRandSample
 
 CRLMCropRandSample(samples_per_label=1000, dataset_path='/path/to/my/crop_subdataset/')()
 ```
@@ -267,8 +264,8 @@ using the CRLMSplitProcessAugment class.
    3. Prepare your CRLMSplitProcessAugment configuration and run it!
 
 ``` python
-from Data.dataset_processors.crlm import CRLMSplitProcessAugment
-from Data.dataset_processors.models import AugmentDict
+from gcrlm.processors import CRLMSplitProcessAugment
+from gcrlm.core.models import AugmentDict
 
 CRLMSplitProcessAugment(
     dataset_path='/media/giussepi/2_0_TB_Hard_Disk/improved_CRLM_dataset/Annotated - Training set (copy)',
@@ -296,7 +293,7 @@ CRLMSplitProcessAugment(
 
 ### Randomly split a dataset of crops into train, val and test subdatasets
 ``` python
-from Data.dataset_processors.crlm import CRLMRandCropSplit
+from gcrlm.processors import CRLMRandCropSplit
 
 CRLMRandCropSplit(dataset_path='<path_to_my_crops_dataset>', val_size=.1, test_size=.1)()
 ```
