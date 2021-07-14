@@ -13,7 +13,7 @@ CRLM samples: A, B) Images with good quantity of annotations. C, D) Images scarc
 1. Add to your requirements file:
 
    ``` bash
-   crlm_processor @ https://github.com/giussepi/crlm_processor/tarball/main
+   crlm_processor @ https://github.com/giussepi/gcrlm/tarball/main
    ```
 
    and run `pip install -r requirements.txt`
@@ -21,12 +21,12 @@ CRLM samples: A, B) Images with good quantity of annotations. C, D) Images scarc
    or just run
 
    ``` bash
-   pip install git+git://github.com/giussepi/crlm_processor.git --use-feature=2020-resolver --no-cache-dir
+   pip install git+git://github.com/giussepi/gcrlm.git --use-feature=2020-resolver --no-cache-dir
    ```
    or just run
 
    ``` bash
-   pip install https://github.com/giussepi/crlm_processor/tarball/main --use-feature=2020-resolver --no-cache-dir
+   pip install https://github.com/giussepi/gcrlm/tarball/main --use-feature=2020-resolver --no-cache-dir
    ```
 
 2. Make a copy of the configuration file and update it properly
